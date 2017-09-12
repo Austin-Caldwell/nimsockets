@@ -1,13 +1,25 @@
 import net
 
+const keepa = "\x0212345^KEEPA^20170912145323\x03"
+
 proc main(port : int) =
   var client = newSocket()
   client.connect("localhost", Port(port))
-  client.send("\x02" & stdin.readLine() & "\x03\c\L")
-  echo("Receiving...")
-  echo("Received:", client.recv(1, 10000))
-  echo("Done receiving.")
-  client.close() # Necessary so we can send another request
+  try:
+    while true:
+      echo("Sending...")
+      client.send(keepa)
+      echo("Sent: ", keepa)
+      echo("Receiving...")
+      var msg = ""
+      var c : string
+      while c != "" and c != "\x03":
+        c = client.recv(1, 60000)
+        msg &= c
+      echo("Received: ", msg)
+      if c == "": break
+  finally:
+    client.close() # Necessary so we can send another request
 
 when isMainModule:
   import os

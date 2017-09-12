@@ -1,5 +1,7 @@
 import net
 
+const ack = "\x0212345^ACK^20170912145323\x03"
+
 proc main(port : int) =
   var socket = newSocket()
   socket.bindAddr(Port(port))
@@ -10,14 +12,21 @@ proc main(port : int) =
     echo("Waiting for connection...")
     socket.acceptAddr(client, address)
     echo("Client connected from: ", address)
-    var line : string
-    while line != "EOM" and line != "":
-      line = client.recvLine()
-      echo("Received:", line)
-      if line != "":
-        echo("Enter response content: ")
-        client.send("\x02" & stdin.readLine() & "\x03")
-    client.close() # Necessary so we can send another request
+    try:
+      while true:
+        echo("Receiving...")
+        var msg = ""
+        var c : string
+        while c != "" and c != "\x03":
+          c = client.recv(1, 60000)
+          msg &= c
+        echo("Received: ", msg)
+        if c == "": break
+        echo("Sending...")
+        client.send(ack)
+        echo("Sent: ", ack)
+    finally:
+      client.close() # Necessary so we can send another request
 
 when isMainModule:
   import os
