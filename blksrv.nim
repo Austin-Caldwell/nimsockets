@@ -7,8 +7,16 @@ proc main(port : int) =
   var client = newSocket()
   var address = ""
   while true:
+    echo("Waiting for connection...")
     socket.acceptAddr(client, address)
     echo("Client connected from: ", address)
+    while socket.hasDataBuffered():
+      echo("Receiving...")
+      echo("Received:", socket.recv(1, 10000))
+    echo("Done receiving.")
+    echo("Enter response content: ")
+    client.send("\x02" & stdin.readLine() & "\x03")
+    client.close() # Necessary so we can send another request
 
 when isMainModule:
   import os
