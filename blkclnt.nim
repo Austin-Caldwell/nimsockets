@@ -1,15 +1,25 @@
 import net
 
 const keepa = "\x0212345^KEEPA^20170912145323\x03"
+const deformed = "\x0212345^KEEPA^201709121453233"
 
 proc main(port : int) =
   var client = newSocket()
   client.connect("localhost", Port(port))
   try:
     while true:
+      echo("Send what?")
+      var toSend : string;
+      case stdin.readLine()
+      of "", "keepa":
+        toSend = keepa
+      of "deformed":
+        toSend = deformed
+      else:
+        break;
       echo("Sending...")
-      client.send(keepa)
-      echo("Sent: ", keepa)
+      client.send(toSend)
+      echo("Sent: ", toSend)
       echo("Receiving...")
       var msg = ""
       var c : string
