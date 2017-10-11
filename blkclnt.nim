@@ -38,4 +38,4 @@ when isMainModule:
     let x = paramStr(1)
     main(parseInt(x))
   else:
-    stderr.writeLine("Exported parameter: port")
+    stderr.writeLine("Expected parameter: port")
