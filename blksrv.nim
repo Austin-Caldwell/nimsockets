@@ -1,12 +1,13 @@
-import net
+import net, times
 
-const ack = "\x0212345^ACK^20170912145323\x03"
+proc getFormattedAck(): string =
+  "\x02" & "12345^ACK^" & format(now(), "yyyyMMddhhmmss") & "\x03"
 
 proc main(port : int) =
   var socket = newSocket()
   socket.bindAddr(Port(port))
   socket.listen()
-  var client = newSocket()
+  var client = new Socket
   var address = ""
   while true:
     echo("Waiting for connection...")
@@ -23,6 +24,7 @@ proc main(port : int) =
         echo("Received: ", msg)
         if c == "": break
         echo("Sending...")
+        var ack = getFormattedAck()
         client.send(ack)
         echo("Sent: ", ack)
     finally:
