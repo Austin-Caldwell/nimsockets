@@ -6,7 +6,7 @@ proc main(port : int) =
   var socket = newSocket()
   socket.bindAddr(Port(port))
   socket.listen()
-  var client = newSocket()
+  var client = new Socket
   var address = ""
   while true:
     echo("Waiting for connection...")
