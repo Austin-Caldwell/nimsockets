@@ -1,20 +1,17 @@
-import net
-
-const keepa = "\x0212345^KEEPA^20170912145323\x03"
-const deformed = "\x0212345^KEEPA^201709121453233"
+import net, times
 
 proc main(port : int) =
   var client = newSocket()
   client.connect("localhost", Port(port))
   try:
     while true:
-      echo("Send what?")
+      echo("Send what? ('keepa' or 'deformed')")
       var toSend : string;
       case stdin.readLine()
       of "", "keepa":
-        toSend = keepa
+        toSend = "\x02" & "12345^KEEPA^" & format(now(), "yyyyMMddhhmmss") & "\x03"
       of "deformed":
-        toSend = deformed
+        toSend = "\x02" & "12345^KEEPA^" & format(now(), "yyyyMMddhhmmss")
       else:
         break;
       echo("Sending...")
