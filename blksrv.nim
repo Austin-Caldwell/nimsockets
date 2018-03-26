@@ -14,7 +14,6 @@ proc main(port : int) =
     socket.acceptAddr(client, address)
     echo("Client connected from: ", address)
     try:
-      while true:
         echo("Receiving...")
         var msg = ""
         var c : string
